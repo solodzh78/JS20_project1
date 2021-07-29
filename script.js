@@ -1,15 +1,11 @@
-/* - money, 
-
+/* 
+- money, 
 - income,
-
-  - addExpenses,
-
-  - deposit,
-
-  - mission,
-
-  - period
-  */
+- addExpenses,
+- deposit,
+- mission,
+- period
+*/
 let money = 'рубли';
 let income;
 let addExpenses;
