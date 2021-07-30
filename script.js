@@ -12,4 +12,4 @@ let addExpenses;
 let deposit, mission, period;
 alert('Hello! World.');
 console.log('Привет консоль');
-// задание принято
+// задание 1 принято
