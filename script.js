@@ -31,3 +31,4 @@ addExpenses = addExpenses.toLowerCase().split(', ');
 console.log('addExpenses: ', addExpenses);
 let budgetDay = money/30;
 console.log('budgetDay: ', budgetDay);
+// Задание 2 принято
