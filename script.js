@@ -24,6 +24,7 @@
 11) Добавить папку с третьим уроком в свой репозиторий на GitHub
 */
 'use strict';
+
 let money = Number(prompt('Ваш месячный доход?', '60000')) || 0;
 let income = 'Администрирование';
 let addExpenses = prompt(
@@ -43,15 +44,15 @@ console.log('typeof deposit: ', typeof deposit);
 console.log('addExpenses.length: ', addExpenses.length);
 console.log(`Период равен ${period} месяцев`);
 console.log(`Цель заработать ${mission} рублей`);
-addExpenses = addExpenses.toLowerCase().split(', ');
+addExpenses = addExpenses.toLowerCase().split(',').map((item)=>item.trim());
 console.log('addExpenses: ', addExpenses);
 
 let budgetDay = Math.floor(budgetMonth/30);
-
 console.log('Бюджет на месяц: ', budgetMonth);
 console.log(budgetMonth > 0 ? `Цель будет достигнута за ${Math.ceil(mission / budgetMonth)} месяцев` 
                             : 'С таким бюджетом цель недостижима');
 console.log('typeof budgetMonth: ', typeof budgetMonth);
+//budgetDay = 0;
 console.log('Бюджет на день: ', budgetDay);
 
 if (budgetDay < 0) {
