@@ -9,6 +9,7 @@
 */
 'use strict';
 
+// ==============================================Объявление функций=========================
 // Объявить функцию getAccumulatedMonth
 const getAccumulatedMonth = function (income, expenses) {
   return income - expenses;
@@ -41,29 +42,35 @@ let isNumber = function (n) {
 
 // Переписать функцию start циклом do while
 const start = function (title, defaultValue = '') {
-  let variable1;
+  let tempVariable;
   do {
-    variable1 = prompt(title, defaultValue);
-  } while (!isNumber(variable1));
-  return variable1;
+    tempVariable = prompt(title, defaultValue);
+  } while (!isNumber(tempVariable));
+  return +tempVariable;
 };
 
 // Объявить функцию getExpensesMonth
 // n - количество статей расходов
 const getExpensesMonth = function (n) {
-  let arr = [
-    [0, 0], 
-    [0, 0]
-  ];
-  // for (let i = 0; i < n; i++) {
-    arr[0][0] = 'кино';
-    // prompt('Введите обязательную статью расходов?');
-    arr[1][1] = start('Во сколько это обойдется?');
-  // }
+  let arr = [];
+  for (let i = 0; i < n; i++) {
+    arr.push([]);
+    arr[i][0] = prompt('Введите обязательную статью расходов?');
+    arr[i][1] = start('Во сколько это обойдется?');
+  }
   return arr;
 };
 
+// Функция расчета суммы обязательных расходов
+let getExpensesMonthSum = function (arr) {
+  let sum = 0;
+  for (let i = 0; i < arr.length; i++) {
+    sum += arr[i][1];
+  }
+  return sum;
+};
 
+// ============================================Тело==================================
 // Объявление переменных
 let money = start('Ваш месячный доход?', '60000');
 let income = 'Администрирование';
@@ -73,16 +80,13 @@ let addExpenses = prompt(
 let deposit = confirm('Есть ли у вас депозит в банке?'); 
 let mission = 1000000, period = 12;
 
+// Массив обязательных расходов
 let expensesMonth = getExpensesMonth(2);
-console.log('expensesMonth: ', expensesMonth);
-
-// let expenses1 = prompt('Введите обязательную статью расходов?', 'кофе');
-// let amount1 = Number(prompt('Во сколько это обойдется?', 10000)) || 0;
-// let expenses2 = prompt('Введите обязательную статью расходов?', 'пончик');
-// let amount2 = Number(prompt('Во сколько это обойдется?', 20000)) || 0;
+// Сумма обязательных расходов вызов getExpensesMonthSum
+let expensesMonthSum = getExpensesMonthSum(expensesMonth);
 
 // Объявить переменную accumulatedMonth и присвоить ей результат вызова функции getAccumulatedMonth
-let accumulatedMonth = getAccumulatedMonth(money, 2000);
+let accumulatedMonth = getAccumulatedMonth(money, expensesMonthSum);
 
 // budgetDay высчитываем исходя из значения месячного накопления (accumulatedMonth)
 let budgetDay = Math.floor(accumulatedMonth/30);
@@ -93,19 +97,19 @@ console.log('typeof income: ', showTypeOf(income));
 console.log('typeof deposit: ', showTypeOf(deposit));
 console.log('typeof accumulatedMonth: ', showTypeOf(accumulatedMonth));
 
-// Расходы за месяц вызов getExpensesMonth
-// console.log('Расходы за месяц: ' + getExpensesMonth(amount1, amount2));
+// Расходы за месяц 
+console.log('Обязательные расходы за месяц: ' + expensesMonthSum);
 
 // Вывод возможных расходов в виде массива (addExpenses)
 addExpenses = addExpenses.toLowerCase().split(',').map((item)=>item.trim());
 console.log('Дополнительные расходы: ', addExpenses);
 
+// Бюджет на день (budgetDay)
+console.log('Бюджет на день: ', budgetDay);
+
 // Cрок достижения цели в месяцах (результат вызова функции getTargetMonth)
 console.log(accumulatedMonth > 0 ? `Цель будет достигнута за ${getTargetMonth(mission, accumulatedMonth)} месяцев` 
                             : 'С таким бюджетом цель недостижима');
-
-// Бюджет на день (budgetDay)
-console.log('Бюджет на день: ', budgetDay);
 
 // вызов функции getStatusIncome
 console.log(getStatusIncome(budgetDay));
