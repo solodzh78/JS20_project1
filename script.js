@@ -1,115 +1,162 @@
 /* 
-1) Переписать функцию start циклом do while
-2) Добавить проверку что введённые данные являются числом, 
-которые мы получаем на вопрос 'Во сколько это обойдется?’ в функции  getExpensesMonth
-3) Если getTargetMonth возвращает нам отрицательное значение, 
-то вместо “Цель будет достигнута” необходимо выводить “Цель не будет достигнута”
-4) Проверить, чтобы все работало и не было ошибок в консоли
-5) Добавить папку с уроком в свой репозиторий на GitHub
+1) Функцию showTypeof и вызов функции удаляем 
+2) В объект appData добавить свойство budget которое будет принимать значение money
+3) В объект appData добавить свойства budgetDay, budgetMonth и expensesMonth, изначально равные нулю
+4) Функции getExpensesMonth, getAccumulatedMonth, getTargetMonth, getStatusIncome - сделать методами объекта AppData
+5) После этого поправить весь проект, чтобы он работал, а именно
+Везде где вызывались наши функции поправить обращение через объект, например
+let expensesMonth = appData.getExpensesMonth(); 
+6) Сразу после объекта выполните вызов appData.asking();
+7) Перенести цикл из метода getExpensesMonth в метод asking, 
+и переписать цикл таким образом чтобы результат записывался в объект  appData.expenses
+в формате:
+expenses: {
+    “ответ на первый вопрос” : “ответ на второй вопрос”,
+    “ответ на первый вопрос” : “ответ на второй вопрос”
+}
+временные условия которые мы писали
+if (i === 0) {
+    expenses1 = prompt('Введите обязательную статью расходов?', 'Кварплата');
+} else {
+    expenses2 = prompt('Введите обязательную статью расходов?', 'Бензин');
+}
+уже не нужны, вопрос задается каждый цикл
+Обратите внимание Если на вопрос "Введите обязательную статью расходов?" ответить 2 раза одинаково, 
+значения свойства просто будут перезаписаны, для проверки отвечайте всегда по разному. (очень частая ошибка)
+Проследите чтобы тип данных значения свойств были числом!
+Пример результата:
+expenses: {
+    “Квартплата” : 5000,
+    “Детский сад” : 2000
+}
+8) Переписать метод getExpensesMonth: 
+с помощью цикла считаем сумму всех обязательных расходов 
+и сохраняем результат в свойство expensesMonth нашего объекта для того, 
+чтобы посчитать сумму используйте цикл for in
+9) getAccumulatedMonth переименовать в getBudget. 
+Этот метод будет высчитывать значения свойств budgetMonth и budgetDay, 
+чтобы вычислить значения используем только свойства объекта (никаких внешних переменных)
+10) В методах getTargetMonth и getStatusIncome исправить переменные, все значения получаем от нашего объекта appData
+11) Вызвать все необходимые методы после объекта, чтобы корректно считались все данные (порядок очень важен).
+12) В консоль вывести: 
+    — Расходы за месяц
+    — За какой период будет достигнута цель (в месяцах)
+    — Уровень дохода
+Все остальное почистить в программе у нас всего две переменных money и appData
+И две функции start и возможно isNumber
+13) Используя цикл for in для объекта (appData), 
+вывести в консоль сообщение "Наша программа включает в себя данные: " (вывести все свойства и значения)
+14) Проверить, чтобы все работало и не было ошибок в консоли
+15) Добавить папку с уроком в свой репозиторий на GitHub
 */
+
 'use strict';
 
 // ==============================================Объявление функций=========================
-// Объявить функцию getAccumulatedMonth
-const getAccumulatedMonth = function (income, expenses) {
-  return income - expenses;
-};
-// Объявить функцию getTargetMonth
-const getTargetMonth = function (target, time) {
-  return Math.ceil(target/time);
-};
-// Объявить функцию showTypeOf
-const showTypeOf = function (x) {
-  return typeof x;
-};
-// Объявить функцию getStatusIncome
-const getStatusIncome = function (income) {
-  
-  if (income < 0) {
-    return 'Что то пошло не так';
-  } else if (income > 1200) {
-    return 'У вас высокий уровень дохода';
-  } else if (income > 600) {
-    return 'У вас средний уровень дохода';
-  } else {
-    return 'К сожалению у вас уровень дохода ниже среднего';
-  }
-};
 // Объявить функцию isNumber
-let isNumber = function (n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-};
+let isNumber = (n) => !isNaN(parseFloat(n)) && isFinite(n);
 
 // Переписать функцию start циклом do while
-const start = function (title, defaultValue = '') {
-  let tempVariable;
+const start = function(title, defaultValue = '') {
+  let tempVar;
   do {
-    tempVariable = prompt(title, defaultValue);
-  } while (!isNumber(tempVariable));
-  return +tempVariable;
+    tempVar = prompt(title, defaultValue);
+  } while (!isNumber(tempVar));
+  return +tempVar;
 };
 
-// Объявить функцию getExpensesMonth
-// n - количество статей расходов
-const getExpensesMonth = function (n) {
-  let arr = [];
-  for (let i = 0; i < n; i++) {
-    arr.push([]);
-    arr[i][0] = prompt('Введите обязательную статью расходов?');
-    arr[i][1] = start('Во сколько это обойдется?');
-  }
-  return arr;
-};
-
-// Функция расчета суммы обязательных расходов
-let getExpensesMonthSum = function (arr) {
-  let sum = 0;
-  for (let i = 0; i < arr.length; i++) {
-    sum += arr[i][1];
-  }
-  return sum;
-};
-
-// ============================================Тело==================================
-// Объявление переменных
+// ============================================Тело===========================================
+// =====================================Объявление переменных=================================
 let money = start('Ваш месячный доход?', '60000');
-let income = 'Администрирование';
-let addExpenses = prompt(
-    'Перечислите возможные расходы за рассчитываемый период через запятую',
-    'интернет, такси, коммуналка, курсы повышения квалификации');
-let deposit = confirm('Есть ли у вас депозит в банке?'); 
-let mission = 1000000, period = 12;
+let appData = {
+  budget: '', // Доход в месяц
+  income: {}, // Дополнительный доход в месяц
+  addincome: [], 
+  expenses: {}, // Обязательные расходы
+  addExpenses: [], // Дополнительные расходы
+  deposit: false, // Депозит
+  mission: 1000000, // Цель
+  period: 12, // Период, месяцев
+  budgetDay: 0, // Доходы минус расходы в день
+  budgetMonth: 0, // Доходы минус расходы в месяц
+  expensesMonth: 0, // Сумма обязательных расходов в месяц
+  asking: function() {
+    // Обязательные расходы
+    let key, value;
+    for (let i = 0; i < 2; i++) {
+      key = prompt('Введите обязательную статью расходов?').trim();
+      value = start('Во сколько это обойдется?', '10000');
+      appData.expenses[key] = value;
+    }
+    // Депозит
+    appData.deposit = confirm('Есть ли у вас депозит в банке?');
+    // Дополнительные расходы
+    appData.addExpenses = prompt(
+      'Перечислите возможные расходы за рассчитываемый период через запятую',
+      'интернет, такси, коммуналка, курсы повышения квалификации'
+    ).toLowerCase().split(',').map((item)=>item.trim());
+  },
+  // Сумма обязательных расходов в месяц
+  getExpensesMonth: function() {
+    let sum = 0;
+    for (let key in appData.expenses) {
+      sum += appData.expenses[key];
+    }
+    appData.expensesMonth = sum;
+  }, 
+  // Доходы минус расходы в месяц и в день
+  getBudget: function() {
+    appData.budgetMonth = appData.budget - appData.expensesMonth;
+    appData.budgetDay = Math.floor(appData.budgetMonth/30);
+  }, 
+  // Время достижения цели, месяцев
+  getTargetMonth: function() {
+      return Math.ceil(appData.mission/appData.budgetMonth);
+  },
+  // Уровень доходов в месяц
+  getStatusIncome: function() {
+  
+    if (appData.budgetDay < 0) {
+      return 'Что то пошло не так';
+    } else if (appData.budgetDay > 1200) {
+      return 'У вас высокий уровень дохода';
+    } else if (appData.budgetDay > 600) {
+      return 'У вас средний уровень дохода';
+    } else {
+      return 'К сожалению у вас уровень дохода ниже среднего';
+    }
+  },
+};
 
-// Массив обязательных расходов
-let expensesMonth = getExpensesMonth(2);
-// Сумма обязательных расходов вызов getExpensesMonthSum
-let expensesMonthSum = getExpensesMonthSum(expensesMonth);
+// ============================================Расчеты====================================
 
-// Объявить переменную accumulatedMonth и присвоить ей результат вызова функции getAccumulatedMonth
-let accumulatedMonth = getAccumulatedMonth(money, expensesMonthSum);
+appData.budget = money;
 
-// budgetDay высчитываем исходя из значения месячного накопления (accumulatedMonth)
-let budgetDay = Math.floor(accumulatedMonth/30);
+// Запрос у пользователя обязательных и дополнительных расходов, наличие депозита
+appData.asking();
 
-// вызовы функции showTypeOf
-console.log('typeof money: ', showTypeOf(money));
-console.log('typeof income: ', showTypeOf(income));
-console.log('typeof deposit: ', showTypeOf(deposit));
-console.log('typeof accumulatedMonth: ', showTypeOf(accumulatedMonth));
+// Сумма обязательных расходов вызов метода getExpensesMonth
+appData.getExpensesMonth();
+
+// Доходы минус расходы в месяц и в день вызов метода getBudget
+appData.getBudget();
 
 // Расходы за месяц 
-console.log('Обязательные расходы за месяц: ' + expensesMonthSum);
+console.log('Обязательные расходы за месяц: ' + appData.expensesMonth);
 
-// Вывод возможных расходов в виде массива (addExpenses)
-addExpenses = addExpenses.toLowerCase().split(',').map((item)=>item.trim());
-console.log('Дополнительные расходы: ', addExpenses);
+// Cрок достижения цели в месяцах (результат вызова ьетода getTargetMonth)
+console.log(appData.budgetMonth > 0 
+  ? `Цель будет достигнута за ${appData.getTargetMonth()} месяцев` 
+  : 'С таким бюджетом цель недостижима'
+);
 
-// Бюджет на день (budgetDay)
-console.log('Бюджет на день: ', budgetDay);
+// Уровень доходов в день, вызов метода getStatusIncome
+console.log('Ваш уровень доходов в день:', appData.budgetDay);
+console.log(appData.getStatusIncome());
 
-// Cрок достижения цели в месяцах (результат вызова функции getTargetMonth)
-console.log(accumulatedMonth > 0 ? `Цель будет достигнута за ${getTargetMonth(mission, accumulatedMonth)} месяцев` 
-                            : 'С таким бюджетом цель недостижима');
-
-// вызов функции getStatusIncome
-console.log(getStatusIncome(budgetDay));
+// Вывод в консоль объекта appData
+console.log('================================================================');
+console.log('Наша программа включает в себя данные:');
+for (let key in appData) {
+  console.log(key, ':', appData[key]);
+}
