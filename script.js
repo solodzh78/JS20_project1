@@ -21,7 +21,15 @@
 const isNumber = (n) => !isNaN(parseFloat(n)) && isFinite(n);
 
 // Функция проверки isText
-const isText = (n) => !isNumber(n) && n.trim() !== '' && typeof n === 'string';
+const isText = (n) => {
+  if (typeof n !== 'string') {
+    return false;
+} else if (parseFloat(n)) {
+    return false;
+} else if (n.trim() === '') {
+    return false;
+} else {return true;}
+};
 
 // Переписать функцию start циклом do while
 const start = function(title, defaultValue = '', callback = isNumber) {
@@ -29,12 +37,12 @@ const start = function(title, defaultValue = '', callback = isNumber) {
   do {
     tempVar = prompt(title, defaultValue);
   } while (!callback(tempVar));
-  return +tempVar;
+  return tempVar;
 };
 
 // ============================================Тело===========================================
 // =====================================Объявление переменных=================================
-let money = start('Ваш месячный доход?', '60000');
+let money = +start('Ваш месячный доход?', '60000');
 let appData = {
   budget: '', // Доход в месяц
   income: {}, // Дополнительный доход в месяц
@@ -52,14 +60,14 @@ let appData = {
   asking: function() {
     // Дополнительный доход в месяц
     if ( confirm('Есть ли у вас доплнительный источник дохода?') ) {
-      let itemIncome = prompt('Какой у вас есть дополнительный заработок?', 'Администрирование');
-      let moneyIncome = prompt('Сколько вы зарабатываете на этом в месяц', 10000);
+      let itemIncome = start('Какой у вас есть дополнительный заработок?', 'Администрирование', isText).trim();
+      let moneyIncome = +start('Сколько вы зарабатываете на этом в месяц', '10000');
       appData.income[itemIncome] = moneyIncome;
     }
     // Обязательные расходы
     for (let i = 0; i < 2; i++) {
-      let key = prompt('Введите обязательную статью расходов?').trim();
-      let value = start('Во сколько это обойдется?', '10000');
+      let key = start('Введите обязательную статью расходов?', '', isText).trim();
+      let value = +start('Во сколько это обойдется?', '10000');
       appData.expenses[key] = value;
     }
     // Депозит
@@ -80,7 +88,12 @@ let appData = {
   }, 
   // Доходы минус расходы в месяц и в день
   getBudget: function() {
-    appData.budgetMonth = appData.budget - appData.expensesMonth;
+
+    appData.budgetMonth = (
+      appData.budget - appData.expensesMonth + 
+      (Object.values(appData.income)[0] ? Object.values(appData.income)[0] : 0) + 
+      (appData.deposit ? Math.floor(appData.moneyDeposit * appData.percentDeposit / 100 / 12) : 0)
+    );
     appData.budgetDay = Math.floor(appData.budgetMonth/30);
   }, 
   // Время достижения цели, месяцев
@@ -104,8 +117,8 @@ let appData = {
   getDepositInfo: function() {
     appData.deposit = confirm('Есть ли у вас депозит в банке?');
     if (appData.deposit) {
-      appData.moneyDeposit = prompt('Какая сумма у вас находится на депозите?', 100000);
-      appData.percentDeposit = prompt('Под какой процент?', 10);
+      appData.moneyDeposit = +start('Какая сумма у вас находится на депозите?', '100000');
+      appData.percentDeposit = +start('Под какой процент?', '10');
     }
   },
   // Сколько денег можно накопить за период
@@ -113,7 +126,6 @@ let appData = {
 };
 
 // ============================================Расчеты====================================
-console.log(start('Введите текст', '', isText));
 appData.budget = money;
 
 // Запрос у пользователя обязательных и дополнительных расходов, наличие депозита
@@ -145,3 +157,20 @@ for (let key in appData) {
   console.log(key, ':', appData[key]);
 }
 
+// Возможные расходы (addExpenses) вывести строкой в консоль каждое слово 
+// с большой буквы слова разделены запятой и пробелом
+// Пример (Интернет, Такси, Коммунальные расходы)
+
+const printAddExpenses = () => {
+  let sum = '';
+  appData.addExpenses.forEach((value, index) => {
+    sum += value.substring(0, 1).toUpperCase() + value.substring(1, value.length);
+
+    if (index !== appData.addExpenses.length - 1) {
+      sum += ', ';
+    }
+  });
+  
+  console.log('Дополнительные расходы:', sum);
+};
+printAddExpenses();
