@@ -1,17 +1,13 @@
 /* 
-1) Сделать проверку при получении данных:
-- наименование дополнительного источника заработка
-- сумма дополнительного заработка
-- ввод статьи обязательных расходов
-- годовой процент депозита
-- сумма депозита
-Что значит проверка данных: где должен быть текст там только текст
-(голые цифры не должно пропускать, а текст с цифрами - должно. 
-Пример: "Купил ВАЗ 2108" - ок, "4567989" - нет), где цифры только цифры!
-Если проверку не прошло, то переспрашивать!
-2) Возможные расходы (addExpenses) вывести строкой в консоль каждое слово 
-с большой буквы слова разделены запятой и пробелом
-Пример (Интернет, Такси, Коммунальные расходы)
+получить каждый элемент в отдельную переменную:
+  Кнопку "Рассчитать" через id
+  Кнопки “+” (плюс) через Tag, каждую в своей переменной. 
+  Чекбокс по id через querySelector
+  Поля для ввода возможных доходов (additional_income-item) при помощи querySelectorAll
+  Каждый элемент в правой части программы через класс(не через querySelector), 
+  которые имеют в имени класса "-value", начиная с class="budget_day-value" и заканчивая class="target_month-value">
+  Оставшиеся поля через querySelector каждый в отдельную переменную:
+  поля ввода (input) с левой стороны и не забудьте про range.
 */
 
 'use strict';
@@ -42,7 +38,51 @@ const start = function(title, defaultValue = '', callback = isNumber) {
 
 // ============================================Тело===========================================
 // =====================================Объявление переменных=================================
-let money = +start('Ваш месячный доход?', '60000');
+
+const startButton = document.getElementById('start');
+console.log('startButton: ', startButton);
+const buttons = document.getElementsByTagName('button');
+console.log('buttons: ', buttons);
+const incomePlusButton = buttons[0];
+const expensesPlusButton = buttons[1];
+const depositCheckBox = document.querySelector('#deposit-check');
+console.log('depositCheckBox: ', depositCheckBox);
+
+const resultRight = document.querySelectorAll('[class$=-value]');
+console.log('resultRight: ', resultRight);
+
+const budgetMonth = document.getElementsByClassName('budget_month-value')[0];
+const budgetDay = document.getElementsByClassName('budget_day-value')[0];
+const expensesMonth = document.getElementsByClassName('expenses_month-value')[0];
+const addIncome = document.getElementsByClassName('additional_income-value')[0];
+const addExpenses = document.getElementsByClassName('additional_expenses-value')[0];
+const incomePeriod = document.getElementsByClassName('income_period-value')[0];
+const targetMonth = document.getElementsByClassName('target_month-value')[0];
+
+const dataLeft = document.querySelector("body > section > div > div.data");
+console.log('dataLeft: ', dataLeft);
+const salaryAmount = dataLeft.querySelector('.salary-amount');
+const incomeTitle = dataLeft.querySelector('.income-title');
+const incomeAmount = dataLeft.querySelector('.income-amount');
+const additionalIncomeItem1 = dataLeft.querySelectorAll('.additional_income-item')[0];
+const additionalIncomeItem2 = dataLeft.querySelector('.additional_income-item')[1];
+const expensesTitle = dataLeft.querySelector('.expenses-title');
+const expensesAmount = dataLeft.querySelector('.expenses-amount');
+const additionalExpensesItem = dataLeft.querySelector('.additional_expenses-item');
+const targetAmount = dataLeft.querySelector('.target-amount');
+const periodSelect = dataLeft.querySelector('.period-select');
+console.log('periodSelect: ', periodSelect);
+
+const periodAmount = dataLeft.querySelector('.period-amount');
+console.log('periodAmount: ', periodAmount);
+
+
+
+
+
+
+
+/* let money = +start('Ваш месячный доход?', '60000');
 let appData = {
   budget: '', // Доход в месяц
   income: {}, // Дополнительный доход в месяц
@@ -173,4 +213,4 @@ const printAddExpenses = () => {
   
   console.log('Дополнительные расходы:', sum);
 };
-printAddExpenses();
+printAddExpenses(); */
