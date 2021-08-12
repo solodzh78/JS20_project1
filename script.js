@@ -53,9 +53,8 @@ let appData = {
     resetButton.style.display = 'inline-block';
     dataLeft = document.querySelector('div.data');
     let textFields = dataLeft.querySelectorAll('input[type="text"]');
-    textFields.forEach(function(item) {
-      item.setAttribute('readonly', true);
-    });
+    textFields.forEach(function(item) { item.setAttribute('disabled', true); });
+    depositCheckBox.setAttribute('disabled', true);
   },
 
   start: function() {
@@ -70,41 +69,56 @@ let appData = {
     this.showResult();
   },
   reset: function() {
-
-    const clearAppData = {
-      budget: '', // Доход в месяц
-      income: {}, // Дополнительный доход в месяц
+    this.clearAppData();
+    this.clearFormFilds();
+    this.removeExpensesBlock();
+    this.removeIncomeBlock();
+    this.removeRangeListener();
+    this.addPlusBtnListeners();
+  },
+  clearAppData: function() {
+    const clearData = {
+      budget: '', 
+      income: {}, 
       addIncome: [],
-      expenses: {}, // Обязательные расходы
-      addExpenses: [], // Дополнительные расходы
-      deposit: false, // Депозит
+      expenses: {}, 
+      addExpenses: [],
+      deposit: false,
       percentDeposit: 0,
       moneyDeposit: 0,
-      budgetDay: 0, // Доходы минус расходы в день
-      budgetMonth: 0, // Доходы минус расходы в месяц
-      expensesMonth: 0, // Сумма обязательных расходов в месяц
+      budgetDay: 0,
+      budgetMonth: 0, 
+      expensesMonth: 0, 
       incomeMonth: 0,
     };
-    for (let key in clearAppData) {
-      appData[key] = clearAppData[key];
+    for (let key in clearData) {
+      appData[key] = clearData[key];
     }
+  },
+  clearFormFilds: function() {
     document.querySelectorAll('.result-total')
-    .forEach(function(item) {
-      item.value = '';
-    });
+    .forEach(function(item) { item.value = ''; });
     dataLeft = document.querySelector('div.data');
     let textFields = dataLeft.querySelectorAll('input[type="text"]');
     textFields.forEach(function(item) {
-      item.removeAttribute('readonly');
+      item.removeAttribute('disabled');
       item.value = '';
     });
+    depositCheckBox.removeAttribute('disabled');
     periodSelect.value = 1;
     periodAmount.textContent = 1;
     depositCheckBox.checked = false;
-    this.removeExpensesBlock();
-    this.removeIncomeBlock();
-
   },
+  removeRangeListener: function() {
+    periodSelect.removeEventListener('input', () => {
+      incomePeriod.value = appData.calcSavedMoney();
+    });
+  },
+  addPlusBtnListeners: function() {
+    expensesPlusButton.addEventListener('click', appData.addExpensesBlock);
+    incomePlusButton.addEventListener('click', appData.addIncomeBlock);
+  },
+
   // =============================== ShowResult=====================
   showResult: function() {
     budgetMonth.value = this.budgetMonth;
@@ -115,6 +129,8 @@ let appData = {
     targetMonth.value = this.getTargetMonth();
     incomePeriod.value = this.calcSavedMoney();
 
+    expensesPlusButton.removeEventListener('click', appData.addExpensesBlock);
+    incomePlusButton.removeEventListener('click', appData.addIncomeBlock);
     periodSelect.addEventListener('input', () => {
       incomePeriod.value = appData.calcSavedMoney();
     });
