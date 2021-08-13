@@ -28,6 +28,8 @@ let startButton = document.getElementById('start'),
       periodSelect = dataLeft.querySelector('.period-select'),
       periodAmount = dataLeft.querySelector('.period-amount'),
       incomeItems = document.querySelectorAll('.income-items');
+const inputText = document.querySelectorAll('[placeholder="Наименование"]');
+const inputNumber = document.querySelectorAll('[placeholder="Сумма"]');
 
 // =========================== appData ================================
 let appData = {
@@ -113,8 +115,6 @@ let appData = {
     });
   },
   addPlusBtnListeners: function() {
-    expensesPlusButton.style.display = 'inline-block';
-    incomePlusButton.style.display = 'inline-block';
     expensesPlusButton.addEventListener('click', appData.addExpensesBlock);
     incomePlusButton.addEventListener('click', appData.addIncomeBlock);
   },
@@ -137,7 +137,6 @@ let appData = {
   },
   addExpensesBlock: function() {
     const cloneExpensesItem = expensesItems[0].cloneNode(true);
-    inputFilter(cloneExpensesItem);    
     cloneExpensesItem.children[0].value = '';
     cloneExpensesItem.children[1].value = '';
     expensesItems[0].parentNode.insertBefore(cloneExpensesItem, expensesPlusButton);
@@ -165,7 +164,6 @@ let appData = {
   },
   addIncomeBlock: function () {
     const cloneIncomeItem = incomeItems[0].cloneNode(true);
-    inputFilter(cloneIncomeItem);
     cloneIncomeItem.children[0].value = '';
     cloneIncomeItem.children[1].value = '';
     incomeItems[0].parentNode.insertBefore(cloneIncomeItem, incomePlusButton);
@@ -288,10 +286,6 @@ incomePlusButton.addEventListener('click', appData.addIncomeBlock);
 periodSelect.addEventListener('input', () => {
   periodAmount.textContent = periodSelect.value;
 });
-function inputFilter(elem){
-  const inputText = elem.querySelectorAll('[placeholder="Наименование"]');
-  const inputNumber = elem.querySelectorAll('[placeholder="Сумма"]');
-
 // Только текст кириллица
 inputText.forEach(item => {
   item.addEventListener('input', () => {
@@ -304,5 +298,3 @@ inputNumber.forEach(item => {
     item.value = item.value.replace(/[^0-9]/, '');
   });
 });
-}
-inputFilter(document);
