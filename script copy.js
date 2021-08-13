@@ -129,8 +129,8 @@ let appData = {
     targetMonth.value = this.getTargetMonth();
     incomePeriod.value = this.calcSavedMoney();
 
-    expensesPlusButton.removeEventListener('click', appData.addExpensesBlock);
-    incomePlusButton.removeEventListener('click', appData.addIncomeBlock);
+    // expensesPlusButton.removeEventListener('click', appData.addExpensesBlock);
+    // incomePlusButton.removeEventListener('click', appData.addIncomeBlock);
     periodSelect.addEventListener('input', () => {
       incomePeriod.value = appData.calcSavedMoney();
     });
