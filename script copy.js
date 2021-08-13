@@ -115,7 +115,9 @@ let appData = {
     });
   },
   addPlusBtnListeners: function() {
+    expensesPlusButton.style.display = 'inline-block';
     expensesPlusButton.addEventListener('click', appData.addExpensesBlock);
+    incomePlusButton.style.display = 'inline-block';
     incomePlusButton.addEventListener('click', appData.addIncomeBlock);
   },
 
