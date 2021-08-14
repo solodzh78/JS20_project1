@@ -298,9 +298,9 @@ AppData.prototype.addEventListeners = function() {
     _this.reset();
   });
   // Кнопка +расходы
-  expensesPlusButton.addEventListener('click', _this.addExpensesBlock);
+  expensesPlusButton.addEventListener('click', _this.addExpensesBlock.bind(_this));
   // Кнопка +доходы
-  incomePlusButton.addEventListener('click', _this.addIncomeBlock);
+  incomePlusButton.addEventListener('click', _this.addIncomeBlock.bind(_this));
   // Input range
   periodSelect.addEventListener('input', () => {
     periodAmount.textContent = periodSelect.value;
