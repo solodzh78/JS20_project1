@@ -61,7 +61,6 @@ class AppData {
     this.budget = +salaryAmount.value;
     this.getIncExp('expenses');
     this.getIncExp('income');
-    this.getExpensesMonth();
     this.getAddIncExp('expenses');
     this.getAddIncExp('income');
     this.getDepositInfo();
@@ -160,6 +159,7 @@ class AppData {
 
   getIncExp(mode) {
     const items = document.querySelectorAll(`.${mode}-items`);
+    let sum = 0;
     items.forEach(item => {
       let itemTitle = item.querySelector(`.${mode}-title`).value;
       let itemCash = item.querySelector(`.${mode}-amount`).value;
@@ -167,15 +167,18 @@ class AppData {
       if (itemTitle !== '' && itemCash !== '') {
         
         if (mode === 'income') {
-          console.log(this.income[itemTitle]);
-          console.log(itemTitle);
-          console.log(this);
           this.income[itemTitle] = +itemCash;
         } else if (mode === 'expenses') {
           this.expenses[itemTitle] = +itemCash;
         }
+        sum += +itemCash;
       }
     });
+    if (mode === 'income') {
+      this.incomeMonth = sum;
+    } else if (mode === 'expenses') {
+      this.expensesMonth = sum;
+    }
   }
 
   getAddIncExp(mode) {
@@ -200,14 +203,6 @@ class AppData {
     });
   }
 
-  // Сумма обязательных расходов в месяц
-  getExpensesMonth() {
-    let sum = 0;
-    for (let key in this.expenses) {
-      sum += this.expenses[key];
-    }
-    this.expensesMonth = sum;
-  }
   // Доходы минус расходы в месяц и в день
   getBudget() {
     this.budgetMonth = (
