@@ -101,7 +101,7 @@ class AppData {
       item.disabled = false;
       item.value = '';
     });
-    depositCheckBox.disabled = false;;
+    depositCheckBox.disabled = false;
     depositBank.disabled = false;
     periodSelect.value = 1;
     periodAmount.textContent = 1;
