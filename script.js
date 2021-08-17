@@ -23,7 +23,10 @@ const startButton = document.getElementById('start'),
       targetAmount = dataLeft.querySelector('.target-amount'),
       periodSelect = dataLeft.querySelector('.period-select'),
       periodAmount = dataLeft.querySelector('.period-amount'),
-      incomeItems = document.querySelectorAll('.income-items');
+      incomeItems = document.querySelectorAll('.income-items'),
+      depositBank = document.querySelector('.deposit-bank'),
+      depositAmount = document.querySelector('.deposit-amount'),
+      depositPercent = document.querySelector('.deposit-percent');
 
 // =========================== appData ================================
 
@@ -44,18 +47,19 @@ class AppData {
   }
   check() {
     if (salaryAmount.value === '') {
-      startButton.setAttribute('disabled', true);
+      startButton.disabled = true;
       return;
     } else {
-      startButton.removeAttribute('disabled');
+      startButton.disabled = false;
     }
   }
   start() {
     const textFields = document.querySelectorAll('.data input[type="text"]');
-    textFields.forEach(item => { item.setAttribute('disabled', true); });
-    depositCheckBox.setAttribute('disabled', true);
-    expensesPlusButton.setAttribute('disabled', true);
-    incomePlusButton.setAttribute('disabled', true);
+    textFields.forEach(item => { item.disabled = true; });
+    depositCheckBox.disabled = true;
+    depositBank.disabled = true;
+    expensesPlusButton.disabled = true;
+    incomePlusButton.disabled = true;
     startButton.style.display = 'none';
     resetButton.style.display = 'inline-block';
     this.budget = +salaryAmount.value;
@@ -94,13 +98,17 @@ class AppData {
     dataLeft = document.querySelector('div.data');
     const textFields = dataLeft.querySelectorAll('input[type="text"]');
     textFields.forEach(item => {
-      item.removeAttribute('disabled');
+      item.disabled = false;
       item.value = '';
     });
-    depositCheckBox.removeAttribute('disabled');
+    depositCheckBox.disabled = false;;
+    depositBank.disabled = false;
     periodSelect.value = 1;
     periodAmount.textContent = 1;
     depositCheckBox.checked = false;
+    depositBank.style.display = 'none';
+    depositAmount.style.display = 'none';
+    depositPercent.style.display = 'none';
   }
   removeRangeListener() {
     periodSelect.removeEventListener('input', () => {
@@ -229,16 +237,40 @@ class AppData {
     }
   }
   // Депозит
+  depositHandler() {
+    if (depositCheckBox.checked) {
+      depositBank.style.display = 'inline-block';
+      depositAmount.style.display = 'inline-block';
+      this.deposit = true;
+      depositBank.addEventListener('change', this.changePercent);
+    } else {
+      depositBank.style.display = 'none';
+      depositAmount.style.display = 'none';
+      depositBank.value = '';
+      depositAmount.value = '';
+      this.deposit = false;
+      depositBank.removeEventListener('change', this.changePercent);
+
+    }
+  }
+  changePercent() {
+    const valueSelect = this.value;
+    if (valueSelect === 'other') {
+      // Home
+      depositPercent.style.display = 'inline-block';
+      depositPercent.value = '';
+
+    } else {
+      depositPercent.value = valueSelect;
+      depositPercent.style.display = 'none';
+
+    }
+  }
   getDepositInfo() {
-    if (this.deposit) {
-      do {
-        this.percentDeposit = prompt('Какой процент?', '10');
-      } while (isNaN(this.percentDeposit) || this.percentDeposit === ' ' ||
-      this.percentDeposit === '' || this.percentDeposit === null);
-      do {
-        this.moneyDeposit = prompt('Какая сумма у вас находится на депозите?', '100000');
-      } while (isNaN(this.moneyDeposit) || this.moneyDeposit === ' ' ||
-      this.moneyDeposit === '' || this.moneyDeposit === null);
+    if (this.deposit === true) {
+      this.percentDeposit = depositPercent.value;
+      this.moneyDeposit = depositAmount.value;
+
     }
   }
   // Сколько денег можно накопить за период
@@ -280,11 +312,23 @@ class AppData {
       periodAmount.textContent = periodSelect.value;
     });
     salaryAmount.addEventListener('input', () => { this.check(); });
+    // Чекбокс депозит
+    depositCheckBox.addEventListener('change', () => {this.depositHandler();});
+    depositPercent.addEventListener('input', () => {
+      depositPercent.value = depositPercent.value.replace(/[^0-9]/, '');
+      if (depositPercent.value < 0 || depositPercent.value > 100) {
+        alert('Введите корректное значение в поле проценты');
+        depositPercent.value = 0;
+      }
+    });
   }
   init() {
     this.addEventListeners();
     this.inputFilter(document);
     this.check();
+    depositCheckBox.checked = false;
+    depositBank.value = '';
+    depositAmount.value = '';
   }
 }
 
